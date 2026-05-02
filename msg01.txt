@@ -1,11 +1,5 @@
-let copyText = '';
+HELLO 
 
-async function loadText() {
-  const res = await fetch('./message.txt?ts=' + Date.now(), {
-    cache: 'no-store'
-  });
-
-  if (!res.ok) {
     throw new Error('message.txt を読み込めませんでした');
   }
 
