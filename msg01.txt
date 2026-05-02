@@ -1,2 +1,24 @@
-﻿ここにメッセージ。
-改行も含めて記入できます。
+let copyText = '';
+
+async function loadText() {
+  const res = await fetch('./message.txt?ts=' + Date.now(), {
+    cache: 'no-store'
+  });
+
+  if (!res.ok) {
+    throw new Error('message.txt を読み込めませんでした');
+  }
+
+  copyText = await res.text();
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const status = document.getElementById('status');
+  const btn = document.getElementById('copyBtn');
+
+  try {
+    await loadText();
+    status.textContent = 'テキスト読込完了';
+  } catch (e) {
+    status.textContent = '読込失敗: ' + e.message;
+  }
