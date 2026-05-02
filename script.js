@@ -9,7 +9,7 @@ for (let i = 1; i <= TOTAL; i++) {
   block.className = 'message-block';
 
   const heading = document.createElement('h2');
-  heading.textContent = `メッセージ ${i}`;
+  heading.textContent = `プロンプト ${i}`;
 
   const textarea = document.createElement('textarea');
   textarea.id = `textarea-${num}`;
