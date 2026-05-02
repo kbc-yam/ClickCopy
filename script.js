@@ -26,7 +26,7 @@ for (let i = 1; i <= TOTAL; i++) {
   block.appendChild(btn);
   list.appendChild(block);
 
-  fetch(file)
+  fetch(file, { cache: 'no-store' })
     .then(res => {
       if (!res.ok) throw new Error(`${file} が見つかりません`);
       return res.text();
