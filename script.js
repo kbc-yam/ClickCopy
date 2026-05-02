@@ -1,9 +1,9 @@
 const TOTAL = 10;
 const list = document.getElementById('message-list');
 
+// 初回：ブロックを生成してテキストを読み込む
 for (let i = 1; i <= TOTAL; i++) {
   const num = String(i).padStart(2, '0');
-  const file = `msg${num}.txt`;
 
   const block = document.createElement('div');
   block.className = 'message-block';
@@ -25,22 +25,52 @@ for (let i = 1; i <= TOTAL; i++) {
   block.appendChild(textarea);
   block.appendChild(btn);
   list.appendChild(block);
+}
 
-  fetch(file, { cache: 'no-store' })
-    .then(res => {
-      if (!res.ok) throw new Error(`${file} が見つかりません`);
-      return res.text();
-    })
-    .then(text => {
-      textarea.value = text;
-      // 内容に合わせて高さを自動調整
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    })
-    .catch(() => {
-      textarea.value = '';
-      textarea.placeholder = `（${file} を読み込めませんでした）`;
-    });
+loadAllTexts();
+
+// 更新ボタン
+document.getElementById('reload-btn').addEventListener('click', () => {
+  const reloadBtn = document.getElementById('reload-btn');
+  reloadBtn.disabled = true;
+  reloadBtn.textContent = '読み込み中...';
+  loadAllTexts().then(() => {
+    reloadBtn.textContent = '&#x21bb; テキストを再読み込み';
+    reloadBtn.innerHTML = '&#x21bb; 再読み込み完了！';
+    reloadBtn.classList.add('reloaded');
+    setTimeout(() => {
+      reloadBtn.innerHTML = '&#x21bb; テキストを再読み込み';
+      reloadBtn.classList.remove('reloaded');
+      reloadBtn.disabled = false;
+    }, 2000);
+  });
+});
+
+function loadAllTexts() {
+  const promises = [];
+  for (let i = 1; i <= TOTAL; i++) {
+    const num = String(i).padStart(2, '0');
+    const file = `msg${num}.txt`;
+    const textarea = document.getElementById(`textarea-${num}`);
+    textarea.placeholder = '読み込み中...';
+
+    const p = fetch(file, { cache: 'no-store' })
+      .then(res => {
+        if (!res.ok) throw new Error(`${file} が見つかりません`);
+        return res.text();
+      })
+      .then(text => {
+        textarea.value = text;
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      })
+      .catch(() => {
+        textarea.value = '';
+        textarea.placeholder = `（${file} を読み込めませんでした）`;
+      });
+    promises.push(p);
+  }
+  return Promise.all(promises);
 }
 
 function copyText(textarea, btn) {

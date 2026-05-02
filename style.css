@@ -92,3 +92,38 @@ textarea:focus {
 .copy-btn.copied {
   background-color: #27ae60;
 }
+
+.reload-bar {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.reload-btn {
+  padding: 8px 24px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.reload-btn:hover {
+  background-color: #dce1e7;
+}
+
+.reload-btn:active {
+  transform: scale(0.97);
+}
+
+.reload-btn.reloaded {
+  background-color: #27ae60;
+  color: #fff;
+  border-color: #27ae60;
+}
+
+.reload-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
