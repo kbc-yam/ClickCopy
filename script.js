@@ -13,7 +13,6 @@ for (let i = 1; i <= TOTAL; i++) {
 
   const textarea = document.createElement('textarea');
   textarea.id = `textarea-${num}`;
-  textarea.readOnly = true;
   textarea.placeholder = '読み込み中...';
 
   const btn = document.createElement('button');
