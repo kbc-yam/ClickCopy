@@ -29,23 +29,6 @@ for (let i = 1; i <= TOTAL; i++) {
 
 loadAllTexts();
 
-// 更新ボタン
-document.getElementById('reload-btn').addEventListener('click', () => {
-  const reloadBtn = document.getElementById('reload-btn');
-  reloadBtn.disabled = true;
-  reloadBtn.textContent = '読み込み中...';
-  loadAllTexts().then(() => {
-    reloadBtn.textContent = '&#x21bb; テキストを再読み込み';
-    reloadBtn.innerHTML = '&#x21bb; 再読み込み完了！';
-    reloadBtn.classList.add('reloaded');
-    setTimeout(() => {
-      reloadBtn.innerHTML = '&#x21bb; テキストを再読み込み';
-      reloadBtn.classList.remove('reloaded');
-      reloadBtn.disabled = false;
-    }, 2000);
-  });
-});
-
 function loadAllTexts() {
   const promises = [];
   for (let i = 1; i <= TOTAL; i++) {
@@ -80,19 +63,11 @@ function copyText(textarea, btn) {
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = 'コピーしました！';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'コピー';
-      btn.classList.remove('copied');
-    }, 2000);
   }).catch(() => {
     // Clipboard API が使えない場合のフォールバック
     textarea.select();
     document.execCommand('copy');
     btn.textContent = 'コピーしました！';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'コピー';
-      btn.classList.remove('copied');
-    }, 2000);
   });
 }
