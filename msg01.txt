@@ -1,4 +1,1 @@
-
-  } catch (e) {
-    status.textContent = '読込失敗: ' + e.message;
-  }
+test
