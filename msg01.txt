@@ -1,18 +1,4 @@
-HELLO 
 
-    throw new Error('message.txt を読み込めませんでした');
-  }
-
-  copyText = await res.text();
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const status = document.getElementById('status');
-  const btn = document.getElementById('copyBtn');
-
-  try {
-    await loadText();
-    status.textContent = 'テキスト読込完了';
   } catch (e) {
     status.textContent = '読込失敗: ' + e.message;
   }
