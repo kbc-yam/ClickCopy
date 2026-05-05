@@ -1,42 +1,74 @@
 const TOTAL = 10;
 const list = document.getElementById('message-list');
 
-// 初回：ブロックを生成してテキストを読み込む
-for (let i = 1; i <= TOTAL; i++) {
-  const num = String(i).padStart(2, '0');
+// ナビゲーションボタンのクリック処理
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    showLesson(btn.dataset.lesson);
+  });
+});
 
-  const block = document.createElement('div');
-  block.className = 'message-block';
-
-  const heading = document.createElement('h2');
-  heading.textContent = `プロンプト ${i}`;
-
-  const textarea = document.createElement('textarea');
-  textarea.id = `textarea-${num}`;
-  textarea.placeholder = '読み込み中...';
-
-  const btn = document.createElement('button');
-  btn.className = 'copy-btn';
-  btn.textContent = 'コピー';
-  btn.addEventListener('click', () => copyText(textarea, btn));
-
-  block.appendChild(heading);
-  block.appendChild(textarea);
-  block.appendChild(btn);
-  list.appendChild(block);
+function showLesson(lesson) {
+  list.innerHTML = '';
+  if (lesson === 'home') {
+    showHome();
+  } else {
+    buildBlocks();
+    loadAllTexts(lesson);
+  }
 }
 
-loadAllTexts();
+function showHome() {
+  const div = document.createElement('div');
+  div.className = 'message-block';
+  div.innerHTML = `
+    <h2>このサイトの使い方</h2>
+    <p style="line-height:1.8; margin-top:8px;">
+      上部のメニューからレッスンを選択すると、そのレッスンのプロンプト一覧が表示されます。<br>
+      各プロンプトの右下にある <strong>「コピー」</strong> ボタンを押すと、内容がクリップボードにコピーされます。<br>
+      コピー済みのボタンは <strong>「コピーしました！」</strong> と表示され、どこまで進んだか確認できます。<br>
+      ボタンを再度押すと、再びコピーが実行されます。
+    </p>
+  `;
+  list.appendChild(div);
+}
 
-function loadAllTexts() {
-  const promises = [];
+function buildBlocks() {
   for (let i = 1; i <= TOTAL; i++) {
     const num = String(i).padStart(2, '0');
-    const file = `msg${num}.txt`;
+
+    const block = document.createElement('div');
+    block.className = 'message-block';
+
+    const heading = document.createElement('h2');
+    heading.textContent = `プロンプト ${i}`;
+
+    const textarea = document.createElement('textarea');
+    textarea.id = `textarea-${num}`;
+    textarea.placeholder = '読み込み中...';
+
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'コピー';
+    btn.addEventListener('click', () => copyText(textarea, btn));
+
+    block.appendChild(heading);
+    block.appendChild(textarea);
+    block.appendChild(btn);
+    list.appendChild(block);
+  }
+}
+
+function loadAllTexts(lesson) {
+  for (let i = 1; i <= TOTAL; i++) {
+    const num = String(i).padStart(2, '0');
+    const file = `${lesson}/msg${num}.txt`;
     const textarea = document.getElementById(`textarea-${num}`);
     textarea.placeholder = '読み込み中...';
 
-    const p = fetch(file, { cache: 'no-store' })
+    fetch(file, { cache: 'no-store' })
       .then(res => {
         if (!res.ok) throw new Error(`${file} が見つかりません`);
         return res.text();
@@ -50,9 +82,7 @@ function loadAllTexts() {
         textarea.value = '';
         textarea.placeholder = `（${file} を読み込めませんでした）`;
       });
-    promises.push(p);
   }
-  return Promise.all(promises);
 }
 
 function copyText(textarea, btn) {
@@ -70,3 +100,6 @@ function copyText(textarea, btn) {
     btn.classList.add('copied');
   });
 }
+
+// 起動時は「はじめに」を表示
+showLesson('home');
