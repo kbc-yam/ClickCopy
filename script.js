@@ -51,7 +51,17 @@ function buildBlocks() {
 
     const btn = document.createElement('button');
     btn.className = 'copy-btn';
-    btn.textContent = 'コピー';
+    const icon = document.createElement('img');
+    icon.src = 'copy.png';
+    icon.alt = '';
+    icon.className = 'copy-icon';
+
+    const label = document.createElement('span');
+    label.className = 'copy-label';
+    label.textContent = 'コピー';
+
+    btn.appendChild(icon);
+    btn.appendChild(label);
     btn.addEventListener('click', () => copyText(textarea, btn));
 
     block.appendChild(heading);
@@ -90,15 +100,24 @@ function copyText(textarea, btn) {
   if (!text) return;
 
   navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = 'コピーしました！';
+    setCopyButtonLabel(btn, 'コピーしました！');
     btn.classList.add('copied');
   }).catch(() => {
     // Clipboard API が使えない場合のフォールバック
     textarea.select();
     document.execCommand('copy');
-    btn.textContent = 'コピーしました！';
+    setCopyButtonLabel(btn, 'コピーしました！');
     btn.classList.add('copied');
   });
+}
+
+function setCopyButtonLabel(btn, text) {
+  const label = btn.querySelector('.copy-label');
+  if (label) {
+    label.textContent = text;
+    return;
+  }
+  btn.textContent = text;
 }
 
 // 起動時は「はじめに」を表示
